@@ -1,74 +1,95 @@
-# SkataBase
+﻿# SkataBase
 
 ## Project Overview
 
-SkataBase is a hardware and software project that aims to combine skateboarding with engineering to develop a platform for capturing, visualising and analysing skateboard tricks.
+SkataBase is a hardware and software project that combines skateboarding and engineering to capture, visualise and analyse skateboard tricks.
 
-The project centres around a bespoke, skateboard-mounted motion tracking device that captures inertial measurement data and transmits it wirelessly to an Android companion application.
+At its centre is a bespoke motion-tracking device mounted beneath a skateboard. It captures inertial measurement data and transmits it wirelessly to an Android companion app.
 
-The longer-term objective is to develop a platform capable of automatically identifying and classifying flatground skateboard tricks using machine learning, while providing meaningful session analytics and visualisations of individual tricks and overall skateboarding performance.
+The long-term goal is to use machine learning to identify and classify flat-ground skateboard tricks, with session analytics and visualisations of individual tricks and overall performance.
 
 Think Strava for skateboarding, facilitated by a purpose-built piece of hardware.
 
+### Repositories
+
+- [Hardware](https://github.com/edwin98thompson/SkataBase.Hardware)
+- [Android app](https://github.com/edwin98thompson/SkataBase.Android)
+- [Firmware](https://github.com/edwin98thompson/SkataBase.Firmware)
+
+### Project Status
+
+The current prototype streams motion data from an ESP32-C6 and ICM-20948 to an Android app. The app visualises board orientation and supports session recording and manual trick annotation. A custom PCB is in development; automated trick classification and session analytics remain future work.
+
 ## Project Origins
 
-The idea for SkataBase first came to me while studying Robotics as an undergraduate. At the time, I was skateboarding regularly and developing an interest in machine learning and its potential applications.
+The idea for SkataBase came to me while studying robotics as an undergraduate. I was skateboarding regularly and becoming interested in machine learning and its potential applications.
 
-Exploring this idea led me to several academic papers investigating inertial sensor-based skateboard trick classification. One particularly relevant paper was:
+Exploring the idea led me to academic papers on classifying skateboard tricks from inertial sensor data. One particularly relevant paper is:
 
 [IMU-based Trick Classification in Skateboarding](https://www5.cs.fau.de/Forschung/Publikationen/2015/Groh15-ITC.pdf)
 
-With the increasing accessibility of low-cost microcontrollers, inertial measurement units (IMUs) and embedded development platforms, I realised that the concept was technically feasible.
+As low-cost microcontrollers, inertial measurement units (IMUs) and embedded development platforms became more accessible, I realised the concept was technically feasible.
 
 I decided to turn the idea into a practical engineering project, bringing together embedded systems, sensor fusion, mobile application development, mechanical design and machine learning.
 
 ## System Overview
 
-SkataBase is composed of several interconnected hardware and software components, working together to capture skateboard motion, process inertial sensor data and ultimately translate it into meaningful information about individual tricks and skateboarding sessions.
+SkataBase combines hardware and software to capture skateboard motion, process inertial sensor data and turn it into information about tricks and skateboarding sessions.
 
-The system is built around an embedded motion-tracking device mounted to the underside of a skateboard, which communicates wirelessly with an Android companion application.
+An embedded motion-tracking device mounted beneath the skateboard communicates wirelessly with the Android companion app.
 
 ### System Architecture
 
-The following diagram illustrates the overall system architecture, from inertial data acquisition through to the planned trick classification and session analytics capabilities.
+The data flow runs from the skateboard-mounted sensor to the Android app. Classification and analytics are planned additions:
+
+```text
+ICM-20948 IMU -> ESP32-C6 firmware -> Bluetooth Low Energy -> Android app
+  motion data    orientation and       sensor data          live view,
+                 packet handling                            recording and
+                                                            annotation
+                                                              |
+                                                              v
+                                               Planned: classification
+                                               and session analytics
+```
 
 ### Embedded System & Firmware
 
-The embedded system is responsible for capturing and processing skateboard motion data.
+The embedded system captures and processes skateboard motion data.
 
 An ESP32-C6 microcontroller interfaces with an ICM-20948 nine-axis inertial measurement unit over SPI. The IMU provides accelerometer, gyroscope and magnetometer measurements, which are used to estimate the orientation and movement of the skateboard.
 
-The firmware handles sensor configuration and calibration, real-time data acquisition, orientation estimation using a Madgwick sensor fusion filter and BLE communication.
+The firmware configures and calibrates the sensor, acquires data in real time, estimates orientation with a Madgwick sensor-fusion filter and handles BLE communication.
 
-Processed sensor measurements and orientation data are encoded into structured packets and transmitted wirelessly to the Android application.
+Sensor measurements and orientation data are encoded in structured packets and sent to the Android app over BLE.
 
 ### Android Application
 
-The Android application acts as the primary user interface for interacting with the motion-tracking device.
+The Android app is the main interface for the motion-tracking device.
 
-It connects to the embedded system over Bluetooth Low Energy, receives and processes incoming sensor data, and provides a real-time 3D visualisation of the skateboard's orientation.
+It connects to the embedded system over Bluetooth Low Energy (BLE), processes incoming sensor data and displays the skateboard's orientation in 3D in real time.
 
-The application also supports session recording and manual trick annotation, providing a mechanism for collecting labelled motion data during skateboarding sessions.
+It also supports session recording and manual trick annotation, so labelled motion data can be collected during skateboarding sessions.
 
-Future development will build upon this foundation to introduce automated trick classification, session analytics and visualisations of skateboarding performance.
+Automated trick classification, session analytics and performance visualisations are planned future features.
 
 ### Custom Hardware
 
-A custom-designed PCB is being developed to consolidate the embedded system into a compact, purpose-built hardware platform.
+A custom PCB is in development to consolidate the embedded system into a compact, purpose-built board.
 
-The design integrates the ESP32-C6 microcontroller, IMU interface, battery connection and supporting electronics, with consideration for power management, physical dimensions and manufacturability.
+The design brings together the ESP32-C6 microcontroller, IMU interface, battery connection and supporting electronics. It also accounts for power management, size and manufacturability.
 
 ### Mechanical Design & Enclosure
 
-A bespoke enclosure is being designed using CAD software and intended for manufacture through 3D printing.
+A bespoke enclosure is being designed in CAD for 3D printing.
 
-The enclosure will house and protect the electronics while providing a compact and secure mounting solution for attachment to the skateboard, with particular consideration for vibration, impact resistance and accessibility.
+It will protect the electronics and provide a compact, secure skateboard mount, with attention to vibration, impact resistance and access to the device.
 
 ## Current Development Status
 
-SkataBase is currently in the prototype and hardware development phase. The initial proof of concept has demonstrated successful motion tracking, wireless data transmission and preliminary skateboard trick event detection.
+SkataBase is in the prototyping and hardware development phase. The initial proof of concept demonstrated motion tracking, wireless data transmission and preliminary skateboard-trick event detection.
 
-The following outlines the current implementation status and remaining development objectives.
+The checklist below summarises completed work and remaining development objectives.
 
 ### Embedded System & Firmware
 
@@ -140,64 +161,62 @@ Developed using Kotlin and Jetpack Compose, the application communicates with th
 
 ### Device Connectivity
 
-![](Images/ScreenShots/Scanning.png)
+![Android app scanning for the skateboard-mounted device](images/ScreenShots/Scanning.png)
 
 Discovery and connection to the skateboard-mounted motion-tracking device.
 
 ### Live Motion Visualisation
 
-![](Images/ScreenShots/Orientation.png)
-![](Images/ScreenShots/Animation.png)
+![Live skateboard orientation in the Android app](images/ScreenShots/Orientation.png)
+![3D skateboard orientation visualisation](images/ScreenShots/Animation.png)
 
 Real-time visualisation of skateboard orientation using incoming IMU data.
 
 ### Session Recording & Data Collection
 
-![](Images/ScreenShots/Training.png)
-![](Images/ScreenShots/Annotation.png)
+![Session recording screen](images/ScreenShots/Training.png)
+![Manual trick annotation screen](images/ScreenShots/Annotation.png)
 
 Recording skateboarding sessions and collecting motion data for subsequent analysis and annotation.
 
 ### Future Analytics
 
-<!-- IMAGE: Placeholder for future analytics interface -->
-
-Planned functionality includes automated trick classification, trick attempt tracking and session performance analytics. For this, research will be undertaken into what classification algorithms will be used (CNNs) and how it will be trained and run within the application. The idea is that it will generate a prediction for the trick that was performed with an associated confidence score against said prediction.
+Planned work includes evaluating classification approaches, training a model and integrating it into the app. The app could report a predicted trick with a confidence score, alongside trick tracking and session analytics. The model architecture has not yet been selected.
 
 ## Hardware Journey
 
-Over the past few months there have been developments in the hardware prototypes used to build and test the application, with more upgrades in the works.
+The hardware has progressed through several prototypes used to develop and test the application. Further refinements are underway.
 
-![](Images/Hardware/Hardware0.jpg)
+![First prototype with an ESP32 DevKit, IMU, charging module and battery](images/Hardware/Hardware0.jpg)
 
-The first iteration of the system used an ESP32 DevKit board, with the 20948 IMU. It also used the TP4056 charging module and a small salvaged LiPo battery from a disposable vape. The board shown here was quite unrefined as you can see by the electrical tape.
+The first iteration used an ESP32 DevKit, an ICM-20948 IMU, a TP4056 charging module and a salvaged LiPo battery. Electrical tape held the early assembly together.
 
-![](Images/Hardware/Hardware1.png)
+![Small wooden test platform resembling a skateboard](images/Hardware/Hardware1.png)
 
-A small wooden platform was made out of salvaged pallet wood to loosely resemble a skateboard.
+I made a small wooden platform from salvaged pallet wood to resemble a skateboard.
 
-![](Images/Hardware/Hardware2.png)
+![Concave wooden test platform covered with skateboard grip tape](images/Hardware/Hardware2.png)
 
-The mini skateboard idea was extended and I got out the angle grinder and grinded down another piece of pallet wood to have a rough concave shape, I sourced some real skateboard griptape to cover the top to make it look the real deal. This activity was non essential but working with my hands was a nice break from the computer work and produced a nice test platform for demos and desk development.
+I extended the mini-skateboard idea by grinding another piece of pallet wood into a rough concave shape and covering it with skateboard grip tape. Building it was a welcome break from computer work and gave me a useful platform for demos and desk development.
 
-![](Images/Hardware/Hardware3.png)
+![Prototype using a Seeed Studio XIAO ESP32-C6](images/Hardware/Hardware3.png)
 
-The next development step was to make a better prototype board. I chose to use the Seeed Studio Xiao ESP32-C6 as the MCU, I chose this for the significantly smaller footprint, which is fine for this project because only a small number of GPIOs are required. Additionally it has built in battery management, meaning a BMS board such as the TP4056 is no longer required, the LiPo solders directly to the underside of the ESP32 so the system is charged via the USB-C port of the device. A latch push button is soldered in series with battery supply.
+For the next prototype, I chose the Seeed Studio XIAO ESP32-C6 for its smaller footprint, which suits the project's modest GPIO requirements. Its onboard battery charging means the LiPo connects directly to the board and charges over USB-C, removing the need for a separate TP4056 charging module. A latching push button is wired in series with the battery supply.
 
-![](Images/Hardware/Hardware4.png)
+![Second prototype PCB](images/Hardware/Hardware4.png)
 
-This image shows the second prototype PCB board, not the significantly smaller layout.
+This is the second prototype PCB, before the layout was reduced in size.
 
-![](Images/Hardware/Hardware5.png)
+![Prototype PCB housed in a repurposed container](images/Hardware/Hardware5.png)
 
-This image shows the use of an old snus container to act as the housing for the prototype PCB. The wires in this image differ slightly from the previous. This is because the SPI protocol was chosen over I2C as it was observed to be more robust.
+I used a repurposed container to house the prototype PCB. The wiring differs from the previous version because I switched from I2C to SPI after finding it more robust in testing.
 
-![](Images/Hardware/Hardware6.png)
+![Prototype sensor attached beneath the skateboard with hook-and-loop tape](images/Hardware/Hardware6.png)
 
-Here the prototype sensor is shown in situ attached to the skateboard using velco tape. (Dont worry the lid was on whilst riding) Unfortunately the device would frequently fly off after performing flip tricks due to the centripetal force acting on it during fast rotations so not allot of data was collected after the first session.
+The prototype sensor is attached beneath the skateboard with hook-and-loop tape. The lid was on while riding. The mount often failed during flip tricks, limiting the data collected after the first session. This showed that the mounting method needed to be improved before further field testing.
 
 
-![](Images/Hardware/Hardware7.png)
+![Custom PCB design in progress](images/Hardware/Hardware7.png)
 
-The current stage of development is looking at PCB design, Kicad is being used for the development. A prelimianry design has been produced but further refinement will be taken before manufacturing. This work goes in parallel with the 3S CAD design which is happening currently. More updates coming soon.
+Current work focuses on the PCB and enclosure designs. The schematic and layout are being developed in KiCad; an initial design is complete and will be refined before fabrication. Enclosure design is progressing in parallel using 3D CAD.
 
